@@ -1,9 +1,9 @@
-class Client:
 
-    # Creates a class
-    def __init__(self, name):
-        if not isinstance(name, str):
-            raise TypeError("That is not a name")
-
-        self.name = name
-
+from tkinter import *
+from tkinter import ttk
+root = Tk()
+home = ttk.Frame(root, padding=10)
+home.grid()
+ttk.Label(home, text="Welcome to the banking app").grid(column=0, row=0)
+ttk.Button(home, text="Quit", command=root.destroy).grid(column=1, row=1)
+root.mainloop()
