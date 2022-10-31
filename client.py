@@ -50,4 +50,17 @@ class Client:
         if not isinstance(overlim, float) and not isinstance(bal, int):
             raise TypeError("That is not a valid overdraft limit.")
 
-        self.fname = fname
+        self.fname      = fname.title()
+        self.lname      = lname.title()
+        self.title      = title.title()
+        self.pp         = pp.lower()
+        self.dob        = dob
+        self.occupation = occupation.title()
+        self.bal        = float(bal)
+        self.overlim    = float(overlim)
+
+    def __str__(self):
+        return "Client called {} {}".format(self.fname, self.lname)
+
+    def __repr__(self):
+        return "Client({} {})".format(self.fname,self.lname)
