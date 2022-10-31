@@ -1,7 +1,7 @@
 
 from tkinter import *
 from tkinter import ttk
-import client
+from client import *
 
 def main():
     None
@@ -15,3 +15,6 @@ def start():
     ttk.Button(home, text="Quit", command=root.destroy).grid(column=2, row=1)
     ttk.Button(home, text="Start", command=main).grid(column=0,row=1)
     root.mainloop()
+
+
+h = Client("Sakir","Azimkar","Mr","He/Him","30/06/1674","Student",300,500)
