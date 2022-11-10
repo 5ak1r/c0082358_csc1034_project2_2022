@@ -193,5 +193,5 @@ def start(root):
     return root
 
 
-# h = Client("Sakir","Azimkar","Mr","He/Him","30/06/1674","Student",300,500)
+# h = Client("Sakir","Azimkar","Mr","He/Him","30/06/1674","Student",300,500) raises an error as expected
 start(None)
