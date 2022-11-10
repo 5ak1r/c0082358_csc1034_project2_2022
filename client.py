@@ -84,6 +84,7 @@ class Client:
         elif overlim < 0:
             raise ValueError("You cannot have a negative overdraft limit.")
 
+        # Assign variables to the information, set balance and overdraft limit to float if integers are input
         self.fname = fname.title()
         self.lname = lname.title()
         self.title = title.title()
@@ -93,26 +94,34 @@ class Client:
         self.bal = float(bal)
         self.overlim = float(overlim)
 
+    def add(self):
+        """
+        Adds the client to the file if they do not already exist
+        :return: False when not a duplicate client
+        """
+        # Checks the client does not already exist, adds them to the file if they don't
         with open("clients.csv", "r+") as file:
-            success = True
+            duplicate = False
             read = file.readlines()
             for row in read:
+                # testing values (I accidentally added a space)
                 # print(read)
                 # print(row)
                 # print(row[0])
-                # Assume there are not two people with the exact same first name, last name and birthday
-                row = row.split(",")
                 # print(type(row[0].lower()))
                 # print(self.fname.lower())
                 # print(str(self.fname.lower)==str(row[0].lower()))
 
+                row = row.split(",")
+                # Assume there are not two people with the exact same first name, last name and birthday
                 if self.fname.lower() == row[0].lower() and self.lname.lower() == row[1].lower() and self.dob == row[4]:
-                    raise ValueError("That person already exists.")
-                    success = False
+                    duplicate = True
 
-            if success:
+            if not duplicate:
                 file.write(f"{self.fname},{self.lname},{self.title},{self.pp},{self.dob},{self.occupation},"
                            f"{self.bal},{self.overlim}\n")
+
+        return duplicate
 
     def edit(self, editor):
         """
@@ -125,12 +134,14 @@ class Client:
             read = file.readlines()
 
             for row in read:
+                row = row.split(",")
                 keys = editor.keys()
                 keys = list(keys)
                 if row[0] == keys[0] and row[1] == keys[1] and row[4] == keys[4]:
                     tempfile.write(f"{editor[row[0]]},{editor[row[1]]},{editor[row[2]]},{editor[row[3]]},"
                                    f"{editor[row[4]]},{editor[row[5]]},{editor[row[6]]},{editor[row[7]]}\n")
                 else:
+                    row = ",".join(row)
                     tempfile.write(row)
                     tempfile.write("\n")
 
@@ -156,3 +167,18 @@ class Client:
         :return: developer-friendly string representation of the class Client
         """
         return "Client({} {})".format(self.fname, self.lname)
+
+
+def searchEdit(fname, lname, dob):
+    with open("clients.csv", "r") as file:
+        read = file.readlines()
+
+        num = 0
+        for row in read:
+            row = row.split(",")
+            # print(row[0], read)
+            if fname.title() == row[0] and lname.title() == row[1] and dob == row[4]:
+                return row, num
+            num += 1
+
+    return None, 0
