@@ -29,6 +29,18 @@ class Client:
         if not isinstance(dob, str):
             raise TypeError("That is not a valid date of birth.")
         else:
+
+            '''
+            # Also could have done this, but I only realised after writing the stuff beforehand. Will keep both anyway.
+            dob_check = dob.split("/")
+
+            try:
+                dt.datetime(int(dob_check[2]), int(dob_check[1]), int(dob_check[0]))
+            except:
+                raise TypeError("That is not a valid date of birth.")
+
+            '''
+
             dob_check = dob.split("/")
             for i in range(len(dob_check)):
                 dob_check[i] = int(dob_check[i])
