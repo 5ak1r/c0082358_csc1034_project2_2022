@@ -14,10 +14,16 @@ def createRoot(title, back):
             ttk.Button(home, text="Back", command=lambda: main(root)).grid(column=0, row=300)
         else:
             ttk.Button(home, text="Start", command=lambda: main(root)).grid(column=0, row=300)
+    elif isinstance(back, int):
+        pass
     else:
         ttk.Button(home, text="Back", command=lambda: start(root)).grid(column=0, row=300)
 
-    ttk.Button(home, text="Quit", command=root.destroy).grid(column=2, row=300)
+    if type(back) == int:
+        ttk.Button(home, text="Confirm", command=root.destroy).grid(column=1, row=300)
+    else:
+        ttk.Button(home, text="Quit", command=root.destroy).grid(column=2, row=300)
+
     return root, home
 
 
@@ -109,19 +115,11 @@ def add(root):
     def collectAndAdd():
         Client(e1Collect(), e2Collect(), e3Collect(), e4Collect(), e5Collect(), e6Collect(), e7Collect(), e8Collect())
 
-        success_root = Tk()
-        success_home = ttk.Frame(success_root, padding=10)
-        success_home.grid()
-
-        success_root.title("Success!")
+        success_root, success_home = createRoot("Success!", 1)
 
         ttk.Label(success_home, text="Client successfully added.").grid(row=0, column=1)
-        ttk.Button(success_home, text="Confirm", command=success_root.destroy).grid(row=1, column=1)
 
-        success_root.update()
-        success_root.geometry("+{}+{}".format(int((root.winfo_screenwidth() - root.winfo_width()) / 2),
-                                              int((root.winfo_screenheight() - root.winfo_height()) / 2)))
-        success_root.mainloop()
+        updateRoot(success_root)
 
     ttk.Button(home, text="Add", command=collectAndAdd).grid(column=1, row=300)
 
