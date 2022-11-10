@@ -1,5 +1,4 @@
 from datetime import datetime as dt
-import csv
 import os
 
 pronouns = ["he", "him", "she", "her", "they", "them", "it", "its"]
@@ -94,41 +93,54 @@ class Client:
         self.bal = float(bal)
         self.overlim = float(overlim)
 
-        with open("clients.csv", "a+") as file:
-            read = csv.reader(file)
-            write = csv.writer(file)
+        with open("clients.csv", "r+") as file:
+            success = True
+            read = file.readlines()
             for row in read:
+                # print(read)
+                # print(row)
+                # print(row[0])
                 # Assume there are not two people with the exact same first name, last name and birthday
-                print(self.fname)
-                print(row[0])
-                if self.fname == row[0] and self.lname == row[1] and self.dob == row[4]:
+                row = row.split(",")
+                # print(type(row[0].lower()))
+                # print(self.fname.lower())
+                # print(str(self.fname.lower)==str(row[0].lower()))
+
+                if self.fname.lower() == row[0].lower() and self.lname.lower() == row[1].lower() and self.dob == row[4]:
                     raise ValueError("That person already exists.")
+                    success = False
 
-            write.writerow([self.fname, self.lname, self.title, self.pp, self.dob, self.occupation,
-                           self.bal, self.overlim])
-
+            if success:
+                file.write(f"{self.fname},{self.lname},{self.title},{self.pp},{self.dob},{self.occupation},"
+                           f"{self.bal},{self.overlim}\n")
 
     def edit(self, editor):
+        """
+        Edits the information of a single client
 
+        :param editor: dictionary containing old value as the key directing to the new value
+        :return: True upon success
+        """
         with open("clients.csv", "r") as file, open("clientstemp.csv", "w") as tempfile:
-            read = csv.reader(file)
-            write = csv.writer(tempfile)
+            read = file.readlines()
 
             for row in read:
                 keys = editor.keys()
                 keys = list(keys)
                 if row[0] == keys[0] and row[1] == keys[1] and row[4] == keys[4]:
-                    write.writerow([editor[row[0]], editor[row[1]], editor[row[2]], editor[row[3]], editor[row[4]],
-                                   editor[row[5]], editor[row[6]], editor[row[7]]])
+                    tempfile.write(f"{editor[row[0]]},{editor[row[1]]},{editor[row[2]]},{editor[row[3]]},"
+                                   f"{editor[row[4]]},{editor[row[5]]},{editor[row[6]]},{editor[row[7]]}\n")
                 else:
-                    write.writerow(row)
+                    tempfile.write(row)
+                    tempfile.write("\n")
 
-        with open("clients.csv", "w") as file, open("clientstemp.csv", "r") as tempfile:
-            write = csv.writer(file)
-            read = csv.file(tempfile)
+        with open("clients.csv", "a") as file, open("clientstemp.csv", "r") as tempfile:
+            read = tempfile.readlines()
+            file.truncate(0)
 
             for row in read:
-                write.writerow(row)
+                file.write(row)
+                file.write("\n")
 
         os.remove("clientstemp.csv")
         return True

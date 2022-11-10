@@ -187,7 +187,6 @@ def start(root):
     ttk.Label(home, text="Welcome to the banking app").grid(column=1, row=0)
 
     updateRoot(root)
-
     return root
 
 
