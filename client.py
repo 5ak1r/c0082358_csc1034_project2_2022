@@ -176,17 +176,55 @@ def searchEdit(fname, lname, dob):
     :param fname: first name input
     :param lname: last name input
     :param dob: date of birth input
-    :return: the client's information and the row they are located in the file, returns None and 0 if client not found
+    :return: the client's information, returns None if client not found
     """
     with open("clients.csv", "r") as file:
         read = file.readlines()
 
-        num = 0
         for row in read:
             row = row.split(",")
             # print(row[0], read)
             if fname.title() == row[0] and lname.title() == row[1] and dob == row[4]:
-                return row, num
-            num += 1
+                return row
 
-    return None, 0
+    return None
+
+
+def searchView(search, searcher):
+    """
+    Searches for the matching data and adds it to a list
+    :param search: what they are searching by (full name, dob or negative balance)
+    :param searcher: search information entered by the user
+    :return:
+    """
+    data = []
+    # print(type(searcher))
+    with open("clients.csv", "r") as file:
+        read = file.readlines()
+        # print(read)
+        searcher = searcher.split(" ")
+        for row in read:
+            # print(row)
+            row = row.split(",")
+            # print(row)
+            if search[0] == "f":
+                try:
+                    searcher = searcher.split(" ")
+                except AttributeError:
+                    pass
+                # print(searcher)
+                # print(row[0])
+                # print(row[1])
+                # print(searcher[0])
+                if isinstance(searcher, list) and searcher[0] == row[0] and searcher[1] == row[1]:
+                    data.append(" ".join(row))
+            elif search[0] == "d":
+                if isinstance(searcher, list) and searcher[0] == row[4]\
+                        or isinstance(searcher, str) and searcher == row[4]:
+                    data.append(" ".join(row))
+            else:
+                # print(float(row[6]))
+                if float(row[6]) < 0:
+                    data.append(" ".join(row))
+
+    return data
