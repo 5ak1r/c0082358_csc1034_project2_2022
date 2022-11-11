@@ -58,6 +58,9 @@ class Client:
 
             dob_check = dob.split("/")
             for i in range(len(dob_check)):
+                if len(dob_check[i]) % 2 != 0:
+                    dob_check[i] = "0" + dob_check[i]
+
                 dob_check[i] = int(dob_check[i])
 
             if dob_check[1] in [9, 4, 5, 6, 11] and dob_check[0] > 30:
@@ -137,13 +140,12 @@ class Client:
                 row = row.split(",")
                 keys = editor.keys()
                 keys = list(keys)
-                if row[0] == keys[0] and row[1] == keys[1] and row[4] == keys[4]:
+                if row[0].lower() == keys[0].lower() and row[1].lower() == keys[1].lower() and row[4] == keys[4]:
                     tempfile.write(f"{editor[row[0]]},{editor[row[1]]},{editor[row[2]]},{editor[row[3]]},"
                                    f"{editor[row[4]]},{editor[row[5]]},{editor[row[6]]},{editor[row[7]]}\n")
                 else:
                     row = ",".join(row)
                     tempfile.write(row)
-                    tempfile.write("\n")
 
         with open("clients.csv", "a") as file, open("clientstemp.csv", "r") as tempfile:
             read = tempfile.readlines()
@@ -151,10 +153,32 @@ class Client:
 
             for row in read:
                 file.write(row)
-                file.write("\n")
 
         os.remove("clientstemp.csv")
         return True
+
+    def delete(self):
+        """
+        Delete a client from the file
+        :return: True upon success
+        """
+        success = False
+        with open("clients.csv", "r") as file, open("clientstemp.csv", "w") as tempfile:
+            read = file.readlines()
+            for row in read:
+                row = row.split(",")
+                if self.fname.lower() == row[0].lower() and self.lname.lower() == row[1].lower() and self.dob == row[4]:
+                    success = True
+                else:
+                    tempfile.write(",".join(row))
+
+        with open("clients.csv", "w") as file, open("clientstemp.csv", "r") as tempfile:
+            read = tempfile.readlines()
+            for row in read:
+                file.write(row)
+
+        os.remove("clientstemp.csv")
+        return success
 
     def __str__(self):
         """
@@ -183,8 +207,8 @@ def searchEdit(fname, lname, dob):
 
         for row in read:
             row = row.split(",")
-            # print(row[0], read)
-            if fname.title() == row[0] and lname.title() == row[1] and dob == row[4]:
+            if fname.lower() == row[0].lower() and lname.lower() == row[1].lower() and dob == row[4]:
+                print("success")
                 return row
 
     return None
@@ -216,12 +240,15 @@ def searchView(search, searcher):
                 # print(row[0])
                 # print(row[1])
                 # print(searcher[0])
-                if isinstance(searcher, list) and searcher[0] == row[0] and searcher[1] == row[1]:
+                if isinstance(searcher, list) and searcher[0].lower() == row[0].lower() \
+                        and searcher[1].lower() == row[1].lower():
                     data.append(" ".join(row))
             elif search[0] == "d":
-                if isinstance(searcher, list) and searcher[0] == row[4]\
+                if isinstance(searcher, list) and searcher[0] == row[4] \
                         or isinstance(searcher, str) and searcher == row[4]:
                     data.append(" ".join(row))
+            elif search[0] == "a":
+                data.append(" ".join(row))
             else:
                 # print(float(row[6]))
                 if float(row[6]) < 0:

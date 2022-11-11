@@ -238,12 +238,25 @@ def beginSearch(root, e1, e2, e3, edview):
         ttk.Label(fail_home, text="That Client does not exist.").grid(column=0, row=0)
         updateRoot(fail_root)
 
-    beginEdview(root, current_client, edview)
+    if edview != "delete":
+        beginEdview(root, current_client, edview)
+    else:
+        current_client = Client(current_client[0], current_client[1], current_client[2], current_client[3],
+                                current_client[4], current_client[5], float(current_client[6]),
+                                float(current_client[7]))
+        success = current_client.delete()
+        if success:
+            success_root, success_home = createRoot("Success!", 1)
+            ttk.Label(success_home, text="Client successfully deleted.").grid(row=0, column=1)
+
+            updateRoot(success_root)
+
     return root
+
 
 def edview(root, edview):
     root.destroy()
-    root, home = createRoot("Edit", True)
+    root, home = createRoot(f"{edview.title()}", True)
 
     ttk.Label(home, text=f"Enter the Name and Date of Birth of the client you wish to {edview}: ").grid(column=0, row=0,
                                                                                                         columnspan=2)
@@ -259,15 +272,8 @@ def edview(root, edview):
     e2.grid(column=1, row=2)
     e3.grid(column=1, row=3)
 
-    ttk.Button(home, text="Search", command=lambda: beginSearch(root, e1, e2, e3, edview)).grid(column=1, row=300)
-
-    updateRoot(root)
-    return root
-
-
-def delete(root):
-    root.destroy()
-    root, home = createRoot("Delete", True)
+    ttk.Button(home, text=f"{edview.title()}", command=lambda: beginSearch(root, e1, e2, e3, edview))\
+        .grid(column=1, row=300)
 
     updateRoot(root)
     return root
@@ -280,24 +286,37 @@ def showView(root, e1, search):
     except AttributeError:
         searcher = str()
 
-    root, home = createRoot("Clients Found", True)
+    root = Tk()
+    root.title("View")
 
     data = searchView(search, searcher)
-    ttk.Label(home, text="Here are the clients found: ").grid(column=0, row=0)
 
-    num = 1
+    scroll = Scrollbar(root, orient='vertical')
+    scroll.pack(side=RIGHT, fill='y')
+
+    text = Text(root, yscrollcommand=scroll.set)
+
     for j in data:
-        ttk.Label(home, text=j).grid(column=1, row=num)
-        num += 1
+        text.insert(END, j)
 
+    if not data:
+        text.insert(END, "No clients found.")
+
+    scroll.config(command=text.yview)
+
+    text.pack()
+
+    ttk.Button(root, text="Back", command=lambda: view(root)).pack(side=LEFT)
+    ttk.Button(root, text="Quit", command=root.destroy).pack(side=RIGHT)
     updateRoot(root)
+
     return root
 
 
 def multiView(root, search):
     root.destroy()
 
-    if search[0] != "n":
+    if search[0] not in ["n", "a"]:
         root, home = createRoot("View", True)
 
         ttk.Label(home, text=f"Enter {search.upper()} to search for: ").grid(column=0, row=0)
@@ -321,7 +340,7 @@ def view(root):
     ttk.Button(home, text="Full Name", command=lambda: multiView(root, "full name")).grid(column=1, row=2)
     ttk.Button(home, text="Date of Birth", command=lambda: multiView(root, "dob")).grid(column=1, row=3)
     ttk.Button(home, text="Negative Balance", command=lambda: multiView(root, "negative balance")).grid(column=1, row=4)
-
+    ttk.Button(home, text="Show all clients", command=lambda: multiView(root, "all")).grid(column=1, row=5)
     updateRoot(root)
     return root
 
@@ -335,7 +354,7 @@ def main(root):
     ttk.Label(home, text="Add a new client to the bank").grid(column=1, row=1)
     ttk.Button(home, text="Edit", command=lambda: edview(root, "edit")).grid(column=0, row=2)
     ttk.Label(home, text="Edit the details of an existing client").grid(column=1, row=2)
-    ttk.Button(home, text="Delete", command=lambda: delete(root)).grid(column=0, row=3)
+    ttk.Button(home, text="Delete", command=lambda: edview(root, "delete")).grid(column=0, row=3)
     ttk.Label(home, text="Delete a client and their data").grid(column=1, row=3)
     ttk.Button(home, text="View", command=lambda: view(root)).grid(column=0, row=4)
     ttk.Label(home, text="View client information").grid(column=1, row=4)
