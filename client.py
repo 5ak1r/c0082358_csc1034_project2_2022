@@ -170,6 +170,14 @@ class Client:
 
 
 def searchEdit(fname, lname, dob):
+    """
+    Searches for a client in the file using their first name, last name and date of birth.
+
+    :param fname: first name input
+    :param lname: last name input
+    :param dob: date of birth input
+    :return: the client's information and the row they are located in the file, returns None and 0 if client not found
+    """
     with open("clients.csv", "r") as file:
         read = file.readlines()
 

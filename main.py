@@ -4,6 +4,7 @@ from client import *
 
 new_data = []
 
+# No docstrings for main since it is all just GUI stuff. Not really relevant to the client functions.
 
 def e1Collect(e1):
     v1 = e1.get()
@@ -163,7 +164,6 @@ def collectAndEdit(e1, e2, e3, e4, e5, e6, e7, e8, current_client):
     edited_client.edit(editor)
 
 
-
 def beginView(root, current_client, pos):
     root.destroy()
 
@@ -295,11 +295,6 @@ def main(root):
 def start(root):
     # Going back to the starting screen should remove the currently open widget. Need to make sure there is no error on
     # initial startup (when a previous widget does not exist)
-    """
-    Starting screen; main navigation to all the application's functionality
-    :param root: Tkinter Widget
-    :return: the same widget to be destroyed upon changing screens
-    """
     try:
         root.destroy()
     except AttributeError:
