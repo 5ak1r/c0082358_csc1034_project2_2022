@@ -1,7 +1,9 @@
 from datetime import datetime as dt
 import os
+import unidecode
 
 pronouns = ["he", "him", "she", "her", "they", "them", "it", "its"]
+acceptable_name_strings = "abcdefghijklmnopqrstuvwxyz'-"
 
 
 class Client:
@@ -26,9 +28,13 @@ class Client:
 
         if not isinstance(fname, str):
             raise TypeError("That is not a valid first name.")
+        else:
+            self.string_ver(fname)
 
         if not isinstance(lname, str):
             raise TypeError("That is not a valid last name.")
+        else:
+            self.string_ver(lname)
 
         if not isinstance(title, str):
             raise TypeError("That is not a valid title.")
@@ -97,6 +103,21 @@ class Client:
         self.bal = float(bal)
         self.overlim = float(overlim)
 
+    @staticmethod
+    def string_ver(string):
+        """
+        Ensures the names entered consist of appropriate letters and punctuation; no random numbers or symbols
+        :param string: the string to be checked
+        :return: None
+        """
+        string_check = string.lower()
+        string_check = unidecode.unidecode(string_check)
+
+        for i in string_check:
+            print(i)
+            if i not in acceptable_name_strings:
+                raise ValueError("Those are not acceptable characters for a name.")
+
     def add(self):
         """
         Adds the client to the file if they do not already exist
@@ -122,11 +143,19 @@ class Client:
 
             if not duplicate:
                 file.write(f"{self.fname},{self.lname},{self.title},{self.pp},{self.dob},{self.occupation},"
-                           f"{self.bal},{self.overlim}\n")
+                           f"{self.bal - self.checkOverbal(1, self.bal, self.overlim)},{self.overlim}\n")
 
         return duplicate
 
-    def edit(self, editor):
+    @staticmethod
+    def checkOverbal(prev_bal, bal, overlim):
+        if bal < 0 and abs(bal) > overlim and prev_bal > 0:
+            return 5
+        else:
+            return 0
+
+    @staticmethod
+    def edit(editor):
         """
         Edits the information of a single client
 
@@ -142,7 +171,9 @@ class Client:
                 keys = list(keys)
                 if row[0].lower() == keys[0].lower() and row[1].lower() == keys[1].lower() and row[4] == keys[4]:
                     tempfile.write(f"{editor[row[0]]},{editor[row[1]]},{editor[row[2]]},{editor[row[3]]},"
-                                   f"{editor[row[4]]},{editor[row[5]]},{editor[row[6]]},{editor[row[7]]}\n")
+                                   f"{editor[row[4]]},{editor[row[5]]},"
+                                   f"{editor[row[6]] - editor.checkOverbal(keys[6],editor[row[6]], editor[row[7]])},"
+                                   f"{editor[row[7]]}\n")
                 else:
                     row = ",".join(row)
                     tempfile.write(row)
