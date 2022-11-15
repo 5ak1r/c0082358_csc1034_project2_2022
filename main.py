@@ -7,60 +7,19 @@ new_data = []
 
 # No docstrings for main since it is all just GUI stuff. Not really relevant to the client functions.
 
-def e1Collect(e1):
-    v1 = e1.get()
-    e1.delete(0, END)
-    return v1
+def eCollect(e):
+    v = e.get()
+    e.delete(0, END)
+    return v
 
 
-def e2Collect(e2):
-    v2 = e2.get()
-    e2.delete(0, END)
-    return v2
-
-
-def e3Collect(e3):
-    v3 = e3.get()
-    e3.delete(0, END)
-    return v3
-
-
-def e4Collect(e4):
-    v4 = e4.get()
-    e4.delete(0, END)
-    # print(v4)
-    # print(v4.split("/")[1] in pronouns)
-    return v4
-
-
-def e5Collect(e5):
-    v5 = e5.get()
-    e5.delete(0, END)
-    return v5
-
-
-def e6Collect(e6):
-    v6 = e6.get()
-    e6.delete(0, END)
-    return v6
-
-
-def e7Collect(e7):
-    v7 = e7.get()
-    e7.delete(0, END)
+def efCollect(ef):
+    vf = ef.get()
+    ef.delete(0, END)
     try:
-        return float(v7)
+        return float(vf)
     except ValueError:
-        return v7
-
-
-def e8Collect(e8):
-    v8 = e8.get()
-    e8.delete(0, END)
-    try:
-        return float(v8)
-    except ValueError:
-        return v8
+        return vf
 
 
 def createRoot(title, back):
@@ -109,6 +68,7 @@ def grid(e1, e2, e3, e4, e5, e6, e7, e8):
 def add(root):
     root.destroy()
     root, home = createRoot("Add", True)
+    root, home = createRoot("Add", True)
 
     ttk.Label(home, text="First Name").grid(column=0, row=0)
     ttk.Label(home, text="Last Name").grid(column=0, row=1)
@@ -131,8 +91,8 @@ def add(root):
     grid(e1, e2, e3, e4, e5, e6, e7, e8)
 
     def collectAndAdd():
-        current_client = Client(e1Collect(e1), e2Collect(e2), e3Collect(e3), e4Collect(e4), e5Collect(e5),
-                                e6Collect(e6), e7Collect(e7), e8Collect(e8))
+        current_client = Client(eCollect(e1), eCollect(e2), eCollect(e3), eCollect(e4), eCollect(e5),
+                                eCollect(e6), efCollect(e7), efCollect(e8))
 
         if not current_client.add():
             success_root, success_home = createRoot("Success!", 1)
@@ -148,8 +108,8 @@ def add(root):
 
 def collectAndEdit(e1, e2, e3, e4, e5, e6, e7, e8, current_client):
     global new_data
-    new_data = [e1Collect(e1), e2Collect(e2), e3Collect(e3), e4Collect(e4), e5Collect(e5), e6Collect(e6),
-                e7Collect(e7), e8Collect(e8)]
+    new_data = [eCollect(e1), eCollect(e2), eCollect(e3), eCollect(e4), eCollect(e5), eCollect(e6),
+                efCollect(e7), efCollect(e8)]
     edited_client = Client(new_data[0], new_data[1], new_data[2], new_data[3], new_data[4], new_data[5],
                            new_data[6], new_data[7])
 
@@ -226,9 +186,9 @@ def beginEdview(root, current_client, edview):
 
 
 def beginSearch(root, e1, e2, e3, edview):
-    e1_val = e1Collect(e1)
-    e2_val = e2Collect(e2)
-    e3_val = e3Collect(e3)
+    e1_val = eCollect(e1)
+    e2_val = eCollect(e2)
+    e3_val = eCollect(e3)
 
     current_client = searchEdit(e1_val, e2_val, e3_val)
 
@@ -281,7 +241,7 @@ def edview(root, edview):
 
 def showView(root, e1, search):
     try:
-        searcher = e1Collect(e1)
+        searcher = eCollect(e1)
         root.destroy()
     except AttributeError:
         searcher = str()
@@ -380,4 +340,5 @@ def start(root):
 
 
 # h = Client("Sakir","Azimkar","Mr","He/Him","30/06/1674","Student",300,500) raises an error as expected
+# p = Client("$akir", "Azimkar", "Mr", "He/Him", "22/10/2001", "Student", 300, 500) raises an error as expected
 start(None)

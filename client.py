@@ -103,6 +103,32 @@ class Client:
         self.bal = float(bal)
         self.overlim = float(overlim)
 
+    # Getters
+    def getFName(self):
+        return self.fname
+
+    def getLName(self):
+        return self.lname
+
+    def getTitle(self):
+        return self.title
+
+    def getPP(self):
+        return self.pp
+
+    def getDOB(self):
+        return self.dob
+
+    def getOccupation(self):
+        return self.occupation
+
+    def getBal(self):
+        return self.bal
+
+    def getOverlim(self):
+        return self.overlim
+
+
     @staticmethod
     def string_ver(string):
         """
@@ -149,7 +175,7 @@ class Client:
 
     @staticmethod
     def checkOverbal(prev_bal, bal, overlim):
-        if bal < 0 and abs(bal) > overlim and prev_bal > 0:
+        if bal < 0 < prev_bal and abs(bal) > overlim:
             return 5
         else:
             return 0
