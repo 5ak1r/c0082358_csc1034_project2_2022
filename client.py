@@ -3,7 +3,7 @@ import os
 import unidecode
 
 pronouns = ["he", "him", "she", "her", "they", "them", "it", "its"]
-acceptable_name_strings = "abcdefghijklmnopqrstuvwxyz'-"
+acceptable_name_strings = "abcdefghijklmnopqrstuvwxyz'- "
 
 
 class Client:
@@ -43,7 +43,7 @@ class Client:
         if isinstance(pp, str):
             for j in pp.split("/"):
                 if j.lower() not in pronouns:
-                    raise TypeError("That is not a valid set of pronouns.")
+                    raise ValueError("That is not a valid set of pronouns.")
         else:
             raise TypeError("That is not a valid set of pronouns.")
 
@@ -74,7 +74,7 @@ class Client:
             elif dob_check[1] == 2:
                 if dob_check[2] % 4 == 0 and dob_check[0] > 29:
                     raise ValueError("That is not a valid date of the form DD/MM/YYYY")
-                elif dob_check[2] > 28:
+                elif dob_check[0] > 28:
                     raise ValueError("That is not a valid date of the form DD/MM/YYYY")
             elif dob_check[0] > 31:
                 raise ValueError("That is not a valid date of the form DD/MM/YYYY")
@@ -128,7 +128,6 @@ class Client:
     def getOverlim(self):
         return self.overlim
 
-
     @staticmethod
     def string_ver(string):
         """
@@ -140,7 +139,7 @@ class Client:
         string_check = unidecode.unidecode(string_check)
 
         for i in string_check:
-            print(i)
+            # print(i)
             if i not in acceptable_name_strings:
                 raise ValueError("Those are not acceptable characters for a name.")
 
@@ -198,7 +197,7 @@ class Client:
                 if row[0].lower() == keys[0].lower() and row[1].lower() == keys[1].lower() and row[4] == keys[4]:
                     tempfile.write(f"{editor[row[0]]},{editor[row[1]]},{editor[row[2]]},{editor[row[3]]},"
                                    f"{editor[row[4]]},{editor[row[5]]},"
-                                   f"{editor[row[6]] - editor.checkOverbal(keys[6],editor[row[6]], editor[row[7]])},"
+                                   f"{editor[row[6]] - Client.checkOverbal(keys[6],editor[row[6]],editor[row[7]])},"
                                    f"{editor[row[7]]}\n")
                 else:
                     row = ",".join(row)
@@ -235,6 +234,10 @@ class Client:
                 file.write(row)
 
         os.remove("clientstemp.csv")
+
+        if not success:
+            raise ValueError("That client does not exist")
+
         return success
 
     def __str__(self):

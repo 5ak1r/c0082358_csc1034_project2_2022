@@ -122,7 +122,12 @@ def collectAndEdit(e1, e2, e3, e4, e5, e6, e7, e8, current_client):
               current_client[6]: new_data[6],
               current_client[7]: new_data[7]}
 
-    edited_client.edit(editor)
+    if edited_client.edit(editor):
+        success_root, success_home = createRoot("Success!", 1)
+        ttk.Label(success_home, text="Client successfully edited.").grid(row=0, column=1)
+
+        updateRoot(success_root)
+
 
 
 def beginEdview(root, current_client, edview):
@@ -204,8 +209,8 @@ def beginSearch(root, e1, e2, e3, edview):
         current_client = Client(current_client[0], current_client[1], current_client[2], current_client[3],
                                 current_client[4], current_client[5], float(current_client[6]),
                                 float(current_client[7]))
-        success = current_client.delete()
-        if success:
+
+        if current_client.delete():
             success_root, success_home = createRoot("Success!", 1)
             ttk.Label(success_home, text="Client successfully deleted.").grid(row=0, column=1)
 
@@ -339,6 +344,4 @@ def start(root):
     return root
 
 
-# h = Client("Sakir","Azimkar","Mr","He/Him","30/06/1674","Student",300,500) raises an error as expected
-# p = Client("$akir", "Azimkar", "Mr", "He/Him", "22/10/2001", "Student", 300, 500) raises an error as expected
 start(None)
